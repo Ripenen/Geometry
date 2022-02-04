@@ -569,10 +569,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced1d6a50b4c471190e8ed418186cbc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levels:
-  - {fileID: 102900000, guid: 3364f450233864f4698171fc6bab217d, type: 3}
-  - {fileID: 102900000, guid: bf147d7eacaf03747b733d0d010bfb6d, type: 3}
-  - {fileID: 102900000, guid: ef9aef487bae5324cbb16d6aed3887b6, type: 3}
+  _levelNames:
+  - Level 1
+  - Level 2
+  - Level 3
   _buttonPrefab: {fileID: 4771501587187736382, guid: 8ee37d52cdaf0cd498676b98dbb60cb9, type: 3}
   _contentObject: {fileID: 723181361}
 --- !u!1 &1701337838
