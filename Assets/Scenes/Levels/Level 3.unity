@@ -445,6 +445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startEnergy: 10
+  _energyText: {fileID: 4201038534733379487, guid: b22bb511bcf82e740bd2ca6d41adb6a3, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

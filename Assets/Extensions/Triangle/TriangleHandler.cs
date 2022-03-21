@@ -4,7 +4,7 @@ using ExtensionsApi;
 
 namespace Extensions.Triangle
 {
-    public sealed class TriangleHandler : HandlerDecorator
+    public sealed class TriangleHandler : ExtensionHandler
     {
         public event Action<int> EnergyChanged;
     

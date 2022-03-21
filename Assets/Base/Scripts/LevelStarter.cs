@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Base.Scripts.UI;
 using ExtensionsApi;
 using UnityEngine;
@@ -8,34 +9,32 @@ namespace Base.Scripts
     {
         [SerializeField] private GameUi _gameUi;
 
-        private Handler _handler;
+        private BaseHandler _handler;
+        private readonly List<IExtension> _extensions = new List<IExtension>();
+        
         private void Start()
         {
-            var baseHandler = new BaseHandler(new Player());
-            baseHandler.CubeMoved += _gameUi.UpdateMovesCounter;
+            _handler = new BaseHandler(new Player());
+            _handler.CubeMoved += _gameUi.UpdateMovesCounter;
             _gameUi.UpdateMovesCounter(0);
         
-            _handler = baseHandler;
-        
-            InitExtensions();
+            InitExtensions(_handler);
         
             InitElements(_handler);
         }
 
-        private void InitExtensions()
+        private void InitExtensions(Handler handler)
         {
             var extensionBehaviours = FindObjectsOfType<ExtensionBehaviour>();
-        
+
             foreach (var extensionBehaviour in extensionBehaviours)
             {
                 var availableExtension = extensionBehaviour.GetExtension();
-                availableExtension.Init();
+                _extensions.Add(availableExtension);
 
                 if (availableExtension is IHandlerExtension handlerExtension)
                 {
-                    handlerExtension.InitHandler(_handler);
-
-                    _handler = handlerExtension.Handler;
+                    handler = handlerExtension.InitHandler(handler);
                 }
 
                 if (availableExtension is IUiExtension uiExtension)
@@ -55,10 +54,14 @@ namespace Base.Scripts
             }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            if(_handler is BaseHandler baseHandler)
-                baseHandler.CubeMoved -= _gameUi.UpdateMovesCounter;
+            _handler.CubeMoved -= _gameUi.UpdateMovesCounter;
+
+            foreach (var extension in _extensions)
+            {
+                extension.DeInit();
+            }
         }
     }
 }

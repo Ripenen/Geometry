@@ -1,37 +1,25 @@
 ﻿using Base.Scripts.UI;
 using ExtensionsApi;
-using UnityEngine;
 
 namespace Extensions.Triangle
 {
-    public class TriangleExtension : IUiExtension, IHandlerExtension
+    public class TriangleExtension : UiAndHandlerExtension
     {
-        public string Name => "Triangle";
-        public Handler Handler { get; private set; }
-        public UiElement UiPrefab { get; private set; }
-
         private UiElement _ui;
         private readonly int _startEnergy;
-
-        public TriangleExtension(int startEnergy)
+        private TriangleHandler _triangleHandler;
+        
+        public TriangleExtension(string name, UiElement uiPrefab, int startEnergy) : base(name, uiPrefab)
         {
             _startEnergy = startEnergy;
         }
 
-        public void Init()
+        public override void DeInit()
         {
-            var settings = Resources.Load<ExtensionSettings>(Name);
-            UiPrefab = settings.UiPrefab;
+            _triangleHandler.EnergyChanged -= _ui.Change;
         }
 
-        public void InitHandler(Handler previousHandler)
-        {
-            var handler = new TriangleHandler(previousHandler, new TrianglePlayer(_startEnergy));
-        
-            Handler = handler;
-        }
-
-        public void InitUi(UiElement instantiatedUi)
+        public override void InitUi(UiElement instantiatedUi)
         {
             _ui = instantiatedUi;
         
@@ -39,12 +27,13 @@ namespace Extensions.Triangle
                 textElement.SetTextName("Energy: ");
         
             instantiatedUi.Change(_startEnergy);
-            ((TriangleHandler) Handler).EnergyChanged += instantiatedUi.Change;
+            _triangleHandler.EnergyChanged += instantiatedUi.Change;
         }
 
-        public void DeInit()
+        public override ExtensionHandler InitHandler(Handler previousHandler)
         {
-            ((TriangleHandler) Handler).EnergyChanged -= _ui.Change;
+            _triangleHandler = new TriangleHandler(previousHandler, new TrianglePlayer(_startEnergy));
+            return _triangleHandler;
         }
     }
 }
