@@ -1,4 +1,4 @@
-﻿using ExtensionsApi;
+﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,36 +7,29 @@ namespace Base.Scripts
     public abstract class GeometryElement : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private int _size;
-        private Handler _handler;
-
+        public event Action<GeometryElement> Clicked;
+        
         public int Size => _size;
-        protected float ScaleSize => (float)_size / 10;
+        private float ScaleSize => (float)_size / 10;
+        protected virtual Vector3 CalculateScale(float size) => Vector2.one * size;
 
-        private  void OnValidate()
+        private void OnValidate()
         {
-            RecalculateSize();
-        }
-
-        public void Init(Handler handler)
-        {
-            _handler = handler;
+            transform.localScale = CalculateScale(ScaleSize);
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Handle(_handler);
+            Clicked?.Invoke(this);
         }
-
-        protected virtual void RecalculateSize()
-        {
-            transform.localScale = Vector2.one * ScaleSize;
-        }
-        protected abstract void Handle(Handler handler);
 
         protected void SetSize(int size)
         {
+            if (size <= 0)
+                throw new ArgumentOutOfRangeException();
+            
             _size = size;
-            RecalculateSize();
+            OnValidate();
         }
     }
 }

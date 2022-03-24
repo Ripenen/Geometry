@@ -1,14 +1,12 @@
 ﻿namespace ExtensionsApi
 {
-    public abstract class UiAndHandlerExtension : IUiExtension, IHandlerExtension
+    public abstract class UiAndHandlerExtension : IUiExtension, IHandlerExtension 
     {
-        protected UiAndHandlerExtension(string name, UiElement uiPrefab)
+        protected UiAndHandlerExtension(UiElement uiPrefab)
         {
-            Name = name;
             UiPrefab = uiPrefab;
         }
 
-        public string Name { get; }
         public UiElement UiPrefab { get; }
 
         public abstract void DeInit();

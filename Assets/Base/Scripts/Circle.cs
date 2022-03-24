@@ -1,4 +1,3 @@
-using ExtensionsApi;
 using UnityEngine;
 
 namespace Base.Scripts
@@ -9,14 +8,6 @@ namespace Base.Scripts
         
         private const float Ratio = 1.45f;
         public void MakeBusy() => IsBusy = true;
-        protected override void RecalculateSize()
-        {
-            transform.localScale = Vector2.one * ScaleSize * Ratio;
-        }
-
-        protected override void Handle(Handler handler)
-        {
-            handler.Handle(this);
-        }
+        protected override Vector3 CalculateScale(float size) =>Vector2.one * size * Ratio;
     }
 }

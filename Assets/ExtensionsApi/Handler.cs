@@ -1,11 +1,10 @@
 ﻿using Base.Scripts;
-using JetBrains.Annotations;
 
 namespace ExtensionsApi
 {
-    public abstract class Handler
+    public abstract class Handler : IElementHandler<Cube>, IElementHandler<Circle>
     {
-        [CanBeNull] protected GeometryElement SelectedElement;
+        protected GeometryElement SelectedElement;
     
         public abstract void Handle(Cube cube);
 

@@ -1,4 +1,5 @@
-﻿using ExtensionsApi;
+﻿using Base.Scripts;
+using ExtensionsApi;
 using UnityEngine;
 
 namespace Extensions.Triangle
@@ -10,7 +11,7 @@ namespace Extensions.Triangle
     
         public override IExtension GetExtension()
         {
-            return new TriangleExtension("Tri", _energyText, _startEnergy);
+            return new TriangleExtension(_energyText, _startEnergy, FindObjectsOfType<Triangle>());
         }
     }
 }

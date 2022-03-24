@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ExtensionsApi;
 using UnityEngine;
 
@@ -6,25 +7,23 @@ namespace Base.Scripts
     public sealed class Cube : GeometryElement
     {
         public bool IsMoved { get; private set; }
-        private void OnValidate()
-        {
-            transform.localScale = Vector2.one * ScaleSize;
-        }
 
-        public void MoveTo(Vector2 position)
+        public async void MoveTo(Vector3 position)
         {
-            transform.position = position;
+            var direction = position - transform.position;
+            
+            while ((position - transform.position).sqrMagnitude > Mathf.Pow(0.01f, 2))
+            {
+                transform.Translate(direction * Time.deltaTime);
+                await Task.Yield();
+            }
+            
             IsMoved = true;
         }
 
         public void DecreaseSize()
         {
             SetSize(Size - 1);
-        }
-
-        protected override void Handle(Handler handler)
-        {
-            handler.Handle(this);
         }
     }
 }

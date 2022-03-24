@@ -1,10 +1,11 @@
 ﻿using System;
 using Base.Scripts;
 using ExtensionsApi;
+using UnityEngine;
 
 namespace Extensions.Triangle
 {
-    public sealed class TriangleHandler : ExtensionHandler
+    public sealed class TriangleHandler : ExtensionHandler, IElementHandler<Triangle>
     {
         public event Action<int> EnergyChanged;
     
@@ -21,7 +22,7 @@ namespace Extensions.Triangle
         }
         public override void Handle(Cube cube)
         {
-            if ((SelectedElement is Triangle triangle) && _player.Energy > 0)
+            if (SelectedElement is Triangle triangle && _player.Energy > 0)
             {
                 cube.DecreaseSize();
                 triangle.Destroy();

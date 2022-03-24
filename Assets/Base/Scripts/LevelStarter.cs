@@ -11,19 +11,27 @@ namespace Base.Scripts
 
         private BaseHandler _handler;
         private readonly List<IExtension> _extensions = new List<IExtension>();
-        
+
+        private ElementsHandlerRouter<Cube> _cubeRouter;
+        private ElementsHandlerRouter<Circle> _circleRouter;
+
         private void Start()
         {
             _handler = new BaseHandler(new Player());
+            
             _handler.CubeMoved += _gameUi.UpdateMovesCounter;
             _gameUi.UpdateMovesCounter(0);
-        
-            InitExtensions(_handler);
-        
-            InitElements(_handler);
+
+            var expandedHandler = InitExtensions(_handler);
+            
+            _cubeRouter = new ElementsHandlerRouter<Cube>(FindObjectsOfType<Cube>(), expandedHandler);
+            _circleRouter = new ElementsHandlerRouter<Circle>(FindObjectsOfType<Circle>(), expandedHandler);
+            
+            _cubeRouter.Init();
+            _circleRouter.Init();
         }
 
-        private void InitExtensions(Handler handler)
+        private Handler InitExtensions(Handler handler)
         {
             var extensionBehaviours = FindObjectsOfType<ExtensionBehaviour>();
 
@@ -43,15 +51,8 @@ namespace Base.Scripts
                     uiExtension.InitUi(ui);
                 }
             }
-        }
-        private void InitElements(Handler handler)
-        {
-            var geometryElements = FindObjectsOfType<GeometryElement>();
-        
-            foreach (var geometryElement in geometryElements)
-            {
-                geometryElement.Init(handler);
-            }
+
+            return handler;
         }
 
         private void OnDisable()
@@ -62,6 +63,9 @@ namespace Base.Scripts
             {
                 extension.DeInit();
             }
+            
+            _cubeRouter.DeInit();
+            _circleRouter.DeInit();
         }
     }
 }

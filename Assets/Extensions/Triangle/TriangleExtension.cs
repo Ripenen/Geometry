@@ -1,4 +1,5 @@
-﻿using Base.Scripts.UI;
+﻿using Base.Scripts;
+using Base.Scripts.UI;
 using ExtensionsApi;
 
 namespace Extensions.Triangle
@@ -6,17 +7,22 @@ namespace Extensions.Triangle
     public class TriangleExtension : UiAndHandlerExtension
     {
         private UiElement _ui;
-        private readonly int _startEnergy;
         private TriangleHandler _triangleHandler;
-        
-        public TriangleExtension(string name, UiElement uiPrefab, int startEnergy) : base(name, uiPrefab)
+        private ElementsHandlerRouter<Triangle> _elementsHandlerRouter;
+
+        private readonly int _startEnergy;
+        private readonly Triangle[] _triangles;
+
+        public TriangleExtension(UiElement uiPrefab, int startEnergy, Triangle[] triangles) : base(uiPrefab)
         {
             _startEnergy = startEnergy;
+            _triangles = triangles;
         }
 
         public override void DeInit()
         {
             _triangleHandler.EnergyChanged -= _ui.Change;
+            _elementsHandlerRouter.DeInit();
         }
 
         public override void InitUi(UiElement instantiatedUi)
@@ -33,6 +39,10 @@ namespace Extensions.Triangle
         public override ExtensionHandler InitHandler(Handler previousHandler)
         {
             _triangleHandler = new TriangleHandler(previousHandler, new TrianglePlayer(_startEnergy));
+
+            _elementsHandlerRouter = new ElementsHandlerRouter<Triangle>(_triangles, _triangleHandler);
+            _elementsHandlerRouter.Init();
+            
             return _triangleHandler;
         }
     }
